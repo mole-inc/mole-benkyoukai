@@ -1,4 +1,4 @@
-# MOLE 勉強会リポジトリ (MOLE Benkyokai)
+# MOLE 勉強会リポジトリ (MOLE benkyoukai)
 
 ## 目的
 インプット/アウトプットをすることによる、
