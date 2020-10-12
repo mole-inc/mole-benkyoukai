@@ -1,0 +1,98 @@
+html {
+  height: 100%;
+}
+
+html {
+  position relative
+  _fontSize(10, mediaDefault)
+  font-weight normal
+  font-style normal
+  color basicBlack
+  font-feature-settings 'pkna'
+  backface-visibility hidden
+
+  +_mediaLarge(){
+    font-size 10px
+  }
+  +_mediaSmall(){
+    _fontSize(10, mediaDesignSmall)
+  }
+}
+
+body {
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  font-family: base;
+  font-feature-settings: "pkna"1;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+*[data-hiding="true"] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+
+img,
+svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  vertical-align: top;
+}
+
+figure {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  background-image: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input,
+select,
+option,
+textarea {
+  border: 0;
+  background-image: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+input[type=radio],
+input[type=checkbox] {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+.No-read {
+  opacity: 0;
+  text-indent: -100%;
+  position: absolute;
+}
