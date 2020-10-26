@@ -73,7 +73,8 @@ class Gsap extends MasterController {
         start: 'top 50%',
         end: 'bottom top',
         toggleActions: "restart none none restart",
-        scrub: true
+        scrub: true,
+        pin: true,
       }
     })
     tl.to('.scrollTarget', {
