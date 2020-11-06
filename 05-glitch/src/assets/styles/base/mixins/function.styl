@@ -1,0 +1,143 @@
+//------
+//mixins - function
+//------
+
+  //mixins - function - mediaSizes
+  mediaDefault = 1280px
+  mediaLarge = 1281px
+  mediaMedium = 768px
+  mediaSmall = 750px
+
+
+  //font-size
+  _fontSize(px, vp){
+    font-size (px/vp)*100 vw
+  }
+  _fontSize_vh(px, vp){
+    font-size (px/vp)*100 vh
+  }
+
+
+  //marginCenter
+  _marginCenter(){
+    margin-right auto
+    margin-left auto
+  }
+
+
+  //top - right - bottom - left
+  _top(px, vp){
+    top (px/vp)*100 vw
+  }
+  _right(px, vp){
+    right (px/vp)*100 vw
+  }
+  _bottom(px, vp){
+    bottom (px/vp)*100 vw
+  }
+  _left(px, vp){
+    left (px/vp)*100 vw
+  }
+  _top_vh(px, vp){
+    top (px/vp)*100 vh
+  }
+  _right_vh(px, vp){
+    right (px/vp)*100 vh
+  }
+  _bottom_vh(px, vp){
+    bottom (px/vp)*100 vh
+  }
+  _left_vh(px, vp){
+    left (px/vp)*100 vh
+  }
+
+
+  //width
+  _width(px, vp){
+    width (px/vp)*100 vw
+  }
+  _width_vh(px, vp){
+    width (px/vp)*100 vh
+  }
+
+
+  //height
+  _height(px, vp){
+    height  (px/vp)*100 vw
+  }
+  _height_vh(px, vp){
+    height  (px/vp)*100 vh
+  }
+
+
+  //margin
+  _marginTop_vh(px, vp){
+    margin-top (px/vp)*100 vh
+  }
+  _marginRight_vh(px, vp){
+    margin-right (px/vp)*100 vh
+  }
+  _marginBottom_vh(px, vp){
+    margin-bottom (px/vp)*100 vh
+  }
+  _marginLeft_vh(px, vp){
+    margin-left (px/vp)*100 vh
+  }
+
+
+  //padding
+  _paddingTop_vh(px, vp){
+    padding-top (px/vp)*100 vh
+  }
+  _paddingRight_vh(px, vp){
+    padding-right (px/vp)*100 vh
+  }
+  _paddingBottom_vh(px, vp){
+    padding-bottom (px/vp)*100 vh
+  }
+  _paddingLeft_vh(px, vp){
+    padding-left (px/vp)*100 vh
+  }
+
+
+  //mediaSizes
+  _mediaLarge(){
+    @media (min-width: mediaLarge) {
+      {block}
+    }
+  }
+  _mediaMedium(){
+    @media (max-width: mediaMedium){
+      {block}
+    }
+  }
+  _mediaSmall(){
+    @media (max-width: mediaSmall){
+      {block}
+    }
+  }
+
+
+
+
+/*
+  .class {
+    +_mediaSmall(){
+
+    }
+  }
+*/
+
+/*
+  .class {
+    +_mediaLarge(){
+
+    }
+    +_mediaMedium(){
+
+    }
+    +_mediaSmall(){
+
+    }
+  }
+*/
