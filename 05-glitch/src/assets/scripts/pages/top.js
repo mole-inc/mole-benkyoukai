@@ -5,7 +5,6 @@ import { ShaderMaterial, TextureLoader, Vector2 } from "three";
 
 const vertexSource = `
 varying vec2 vUv;
-uniform float uPressed;
 
 void main() {
   vUv = uv;
