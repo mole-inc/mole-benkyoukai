@@ -1,6 +1,6 @@
 //top
 import { store } from "../vendors/store";
-import * as THREE from 'three';
+import * as THREE from "three";
 import { ShaderMaterial, TextureLoader, Vector2 } from "three";
 
 const vertexSource = `
@@ -62,14 +62,18 @@ float random(vec2 v) {
 void main() {
   vUv = uv;
 
-  float rand = random(vec2(uv.y, 0.0) * fract(time));
-  //vUv.x += rand * uPressed * 0.01;
+  float rand = random(vec2(vUv.y, 0.0) * fract(sin(time)));
+  float x = position.x / 1.5;
+  float y = position.y / 1.5;
+  float z = position.z / 1.5;
+  x += mod(sin(rand * uPressed * 0.05)*0.5, 0.01);
+  x += fract(sin(rand * uPressed * 0.02)) * 0.01;
 
-  gl_Position = vec4(position, 1.0);
+  gl_Position = vec4(x, y, z, 1.0);
 }
 `;
 
-const fragmentSource  = `
+const fragmentSource = `
 varying vec2 vUv;
 
 uniform float time;
@@ -145,109 +149,116 @@ void main() {
   float shift = uPressed;
 
   float noise = mod( random( vec2(y, 0.0) ) * mod(sin(time), 0.01), 0.01);
-  noise += mod( random( vec2(y * 10.0, 0.0) ) * mod(cos(time), 0.01), 0.01);
+  noise += mod( random( vec2(y * 10.0, 0.0) ) * mod(sin(time), 0.01), 0.01);
   uv.x += noise * shift;
 
   float r = texture2D(image, uv).r;
-  float g = texture2D(image, uv).g;
-  float b = texture2D(image, uv).b;
+  float g = texture2D(image, uv + vec2(shift * noise, 0.0)).g;
+  float b = texture2D(image, uv + vec2(shift * noise, 0.0)).b;
 
   vec3 color = vec3(r, g, b);
   gl_FragColor = vec4(color, 1.0);
 }
 `;
 
-export default async ()=> {
+export default async () => {
   let pressed = 0.0;
 
-  window.addEventListener('mousedown', ()=> {
+  window.addEventListener("mousedown", () => {
     pressed = 1.0;
   });
-  window.addEventListener('mouseup', ()=> {
+  window.addEventListener("mouseup", () => {
     pressed = 0.0;
-  })
+  });
 
   // renderer初期化
-    const canvas = document.querySelector('#canvas');
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      alpha: true
-    });
-    renderer.setClearColor(0xffffff, 0);
-    renderer.setSize(store.windowWidth, store.windowHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+  const canvas = document.querySelector("#canvas");
+  const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+  });
+  renderer.setClearColor(0xffffff, 0);
+  renderer.setSize(store.windowWidth, store.windowHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
 
   // scene作成
-    const scene = new THREE.Scene();
+  const scene = new THREE.Scene();
 
   // camera作成
-    const camera = new THREE.PerspectiveCamera(60, store.windowWidth / store.windowHeight, 1, 1000);
-    camera.position.set(0, 0, +10);
+  const camera = new THREE.PerspectiveCamera(
+    60,
+    store.windowWidth / store.windowHeight,
+    1,
+    1000
+  );
+  camera.position.set(0, 0, +10);
 
   // light作成
-    const pointLight = new THREE.PointLight(0x00ffff);
-    scene.add(pointLight);
-    pointLight.position.set(2, 2, 2);
+  const pointLight = new THREE.PointLight(0x00ffff);
+  scene.add(pointLight);
+  pointLight.position.set(2, 2, 2);
 
   // texture読み込み
-    const imageLoader = (src)=>{
-      return new Promise((resolve)=>{
-        new THREE.TextureLoader().load(
-          src,
-          (texture)=>{
-            resolve(texture);
-          }
-        )
-      })
-    }
-    const url = 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Vervet_Monkey_%28Chlorocebus_pygerythrus%29.jpg'
-    const texture = await imageLoader(url)
+  const imageLoader = (src) => {
+    return new Promise((resolve) => {
+      new THREE.TextureLoader().load(src, (texture) => {
+        resolve(texture);
+      });
+    });
+  };
+  const url =
+    "https://upload.wikimedia.org/wikipedia/commons/e/ea/Vervet_Monkey_%28Chlorocebus_pygerythrus%29.jpg";
+  const texture = await imageLoader(url);
 
   // geo作成
-    const geo = new THREE.PlaneGeometry(1.5, 1.5, 10, 10);
+  const geo = new THREE.PlaneGeometry(2, 2, 50, 50);
 
   // material作成
-    const uniforms = {
-      time: {
-        value: 0.0,
-      },
-      resolution: {
-        value: new THREE.Vector2(store.windowWidth, store.windowHeight),
-      },
-      image: {
-        value: texture,
-      },
-      imageResolution: {
-        value: new THREE.Vector2(texture.image.naturalWidth, texture.image.naturalHeight),
-      },
-      uPressed: {
-        value: pressed,
-      },
-      uMouse: {
-        value: new THREE.Vector2(0.5, 0.5),
-      },
-    }
-    const mat = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: vertexSource,
-      fragmentShader: fragmentSource,
-    });
+  const uniforms = {
+    time: {
+      value: 0.0,
+    },
+    resolution: {
+      value: new THREE.Vector2(store.windowWidth, store.windowHeight),
+    },
+    image: {
+      value: texture,
+    },
+    imageResolution: {
+      value: new THREE.Vector2(
+        texture.image.naturalWidth,
+        texture.image.naturalHeight
+      ),
+    },
+    uPressed: {
+      value: pressed,
+    },
+    uMouse: {
+      value: new THREE.Vector2(0.5, 0.5),
+    },
+  };
+  const mat = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: vertexSource,
+    fragmentShader: fragmentSource,
+    wireframe: false,
+  });
 
-    //const mat = new THREE
+  //const mat = new THREE
 
   // mesh作成
-    const mesh = new THREE.Mesh(geo, mat);
-    scene.add(mesh);
+  const mesh = new THREE.Mesh(geo, mat);
+  scene.add(mesh);
 
   // 描画
+  renderer.render(scene, camera);
+  const tick = () => {
+    const sec = performance.now() / 1000;
+    uniforms.time.value = sec;
+    //uniforms.uPressed.value += (pressed - uniforms.uPressed.value) * 0.1;
+    uniforms.uPressed.value = pressed;
     renderer.render(scene, camera);
-    const tick = ()=> {
-      const sec = performance.now() / 1000;
-      uniforms.time.value = sec;
-      //uniforms.uPressed.value += (pressed - uniforms.uPressed.value) * 0.1;
-      uniforms.uPressed.value = pressed;
-      renderer.render(scene, camera);
-      requestAnimationFrame(tick);
-    }
     requestAnimationFrame(tick);
-}
+  };
+  requestAnimationFrame(tick);
+};
